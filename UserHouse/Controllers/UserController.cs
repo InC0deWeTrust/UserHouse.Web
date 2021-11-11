@@ -15,9 +15,9 @@ namespace UserHouse.Web.Controllers
     {
         private readonly UserAppService _userAppService;
 
-        public UserController()
+        public UserController(UserAppService userAppService)
         {
-            _userAppService = new UserAppService();
+            _userAppService = userAppService;
         }
 
         //TODO: Change parameters to model 
