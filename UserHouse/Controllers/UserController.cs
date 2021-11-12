@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UserHouse.Application;
 using UserHouse.Data.Entities;
 using UserHouse.Application.Models;
 using UserHouse.Application.Users;
+using UserHouse.Web.Dtos.Users;
 
 namespace UserHouse.Web.Controllers
 {
@@ -20,24 +22,16 @@ namespace UserHouse.Web.Controllers
             _userAppService = userAppService;
         }
 
-        //TODO: Change parameters to model 
         [HttpPost]
         [Route("Create")]
-        public void CreateUser(string firstName, string lastName, DateTime dateOfBirth)
+        public void CreateUser([FromBody] CreateUserDto createUserDto)
         {
-            var newUserModel = new UserModel
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth
-            };
-
-            _userAppService.Create(newUserModel);
+            _userAppService.Create(createUserDto);
         }
 
         [HttpGet]
         [Route("GetById")]
-        public UserModel GetUserById(int userId)
+        public UserModel GetUserById([FromHeader] int userId)
         {
             return _userAppService.GetById(userId);
         }
@@ -50,17 +44,17 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateUser")]
-        public void UpdateUser(int userId, string firstName, string lastName, string dateOfBirth)
+        [Route("Update")]
+        public void UpdateUser([FromBody] UserDto userDto)
         {
-            var userModel = new UserModel
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = Convert.ToDateTime(dateOfBirth)
-            };
+            _userAppService.Update(userDto);
+        }
 
-            _userAppService.Update(userModel, userId);
+        [HttpDelete]
+        [Route("Delete")]
+        public void DeleteUser([FromHeader] int userId)
+        {
+            _userAppService.Delete(userId);
         }
     }
 }

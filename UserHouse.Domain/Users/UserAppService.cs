@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using UserHouse.Application.Models;
 using UserHouse.Data.Entities;
 using UserHouse.Data.Repositories.Users;
+using UserHouse.Web.Dtos.Users;
 
 namespace UserHouse.Application.Users
 {
@@ -34,18 +34,20 @@ namespace UserHouse.Application.Users
             return CustomMapper.mapper.Map<UserModel>(user);
         }
 
-        public void Create(UserModel userModel)
+        public void Create(CreateUserDto createUserDto)
         {
-            var newUser = CustomMapper.mapper.Map<User>(userModel);
+            var newUser = CustomMapper.mapper.Map<User>(createUserDto);
+
+            newUser.DateOfBirth = DateTime.Now;
 
             _userRepository.Create(newUser);
         }
 
-        public void Update(UserModel userModel, int userId)
+        public void Update(UserDto userDto)
         {
-            var updatedUser = CustomMapper.mapper.Map<User>(userModel);
+            var updatedUser = CustomMapper.mapper.Map<User>(userDto);
 
-            _userRepository.Update(userId, updatedUser);
+            _userRepository.Update(updatedUser);
         }
 
         public void Delete(int userId)

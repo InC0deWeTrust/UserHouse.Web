@@ -17,7 +17,7 @@ namespace UserHouse.Data.Repositories.Users
 
         void Delete(int id);
 
-        void Update(int id, User user);
+        void Update(User user);
 
         void Save();
     }
