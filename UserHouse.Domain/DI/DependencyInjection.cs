@@ -11,11 +11,11 @@ namespace UserHouse.Application.DI
 {
     public static class DependencyInjection
     {
-        public static void RegisterDomainServices(this IServiceCollection collection)
+        public static void RegisterDomainServices(this IServiceCollection services)
         {
             //collection.AddAutoMapper(typeof(IFormService).Assembly);
-            collection.AddTransient<UserAppService>();
-            collection.RegisterDataServices();
+            services.AddTransient<UserAppService>();
+            services.RegisterDataServices();
         }
     }
 }

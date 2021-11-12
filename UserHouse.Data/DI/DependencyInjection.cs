@@ -5,9 +5,9 @@ namespace UserHouse.Data.DI
 {
     public static class DependencyInjection
     {
-        public static void RegisterDataServices(this IServiceCollection collection)
+        public static void RegisterDataServices(this IServiceCollection services)
         {
-            collection.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
         }
     }
 }

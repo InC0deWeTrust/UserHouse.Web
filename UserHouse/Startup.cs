@@ -11,8 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using UserHouse.Data.ContextDb;
 using UserHouse.Application.DI;
+using AutoMapper;
 
 namespace UserHouse
 {
@@ -27,6 +29,7 @@ namespace UserHouse
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddControllers();
             services.RegisterDomainServices();
         }
