@@ -8,5 +8,9 @@
     <ProjectReference Include="..\UserHouse.Domain\UserHouse.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Users\" />
+  </ItemGroup>
+
 
 </Project>
