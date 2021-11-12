@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using UserHouse.Application.Models;
 using UserHouse.Data.Entities;
 using UserHouse.Data.Repositories.Users;
+using UserHouse.Web.Dtos.Users;
 
 namespace UserHouse.Application.Users
 {
@@ -19,59 +20,34 @@ namespace UserHouse.Application.Users
             _userRepository = userRepository;
         }
 
-        //TODO: AUTOMAPPER
         public List<UserModel> GetAll()
         {
             var users = _userRepository.GetAll();
 
-            var userModels = users
-                .Select(user => new UserModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                DateOfBirth = user.DateOfBirth
-            })
-                .ToList();
-
-            return userModels;
+            return CustomMapper.mapper.Map<List<UserModel>>(users);
         }
 
         public UserModel GetById(int userId)
         {
             User user = _userRepository.GetById(userId);
 
-            UserModel userModel = new UserModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                DateOfBirth = user.DateOfBirth
-            };
-
-            return userModel;
+            return CustomMapper.mapper.Map<UserModel>(user);
         }
 
-        public void Create(UserModel userModel)
+        public void Create(CreateUserDto createUserDto)
         {
-            User newUser = new User
-            {
-                FirstName = userModel.FirstName,
-                LastName = userModel.LastName,
-                DateOfBirth = userModel.DateOfBirth
-            };
+            var newUser = CustomMapper.mapper.Map<User>(createUserDto);
+
+            newUser.DateOfBirth = DateTime.Now;
 
             _userRepository.Create(newUser);
         }
 
-        public void Update(UserModel userModel, int userId)
+        public void Update(UserDto userDto)
         {
-            User updatedUser = new User
-            {
-                FirstName = userModel.FirstName,
-                LastName = userModel.LastName,
-                DateOfBirth = userModel.DateOfBirth
-            };
+            var updatedUser = CustomMapper.mapper.Map<User>(userDto);
 
-            _userRepository.Update(userId, updatedUser);
+            _userRepository.Update(updatedUser);
         }
 
         public void Delete(int userId)
