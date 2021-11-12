@@ -22,12 +22,17 @@ namespace UserHouse.Data.Repositories.Users
         public void Create(User user)
         {
             _userHouseDbContext.Users.Add(user);
+
+            Save();
         }
 
         public void Delete(int id)
         {
             var user = _userHouseDbContext.Users.Find(id);
+
             _userHouseDbContext.Users.Remove(user);
+
+            Save();
         }
 
         public List<User> GetAll()
@@ -45,11 +50,18 @@ namespace UserHouse.Data.Repositories.Users
             _userHouseDbContext.SaveChanges();
         }
 
-        public void Update(int id, User user)
+        //TODO: Think of better way to do
+        public void Update(User user)
         {
-            User oldUser = _userHouseDbContext.Users.Find(id);
-            oldUser = user;
+            User oldUser = _userHouseDbContext.Users.Find(user.Id);
+
+            oldUser.FirstName = user.FirstName;
+            oldUser.LastName = user.LastName;
+            oldUser.DateOfBirth = user.DateOfBirth;
+
             _userHouseDbContext.Users.Update(oldUser);
+
+            Save();
         }
     }
 }
