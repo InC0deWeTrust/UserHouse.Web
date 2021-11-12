@@ -14,7 +14,7 @@ namespace UserHouse.Application.Users
     {
         private readonly IUserRepository _userRepository;
 
-        public UserAppService(UserRepository userRepository)
+        public UserAppService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
