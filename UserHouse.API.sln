@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserHouse.Web", "UserHouse\UserHouse.Web.csproj", "{64BFC08E-20D5-47B1-8DD7-6373FFF6E89F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserHouse.Web.Host", "UserHouse\UserHouse.Web.Host.csproj", "{64BFC08E-20D5-47B1-8DD7-6373FFF6E89F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserHouse.Data", "UserHouse.Data\UserHouse.Data.csproj", "{84B05CE5-E195-406B-9455-82A9B58D6E5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserHouse.Infrastructure", "UserHouse.Data\UserHouse.Infrastructure.csproj", "{84B05CE5-E195-406B-9455-82A9B58D6E5C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserHouse.Application", "UserHouse.Domain\UserHouse.Application.csproj", "{468B00F7-B34D-4BD7-A571-26A74527C37C}"
 EndProject

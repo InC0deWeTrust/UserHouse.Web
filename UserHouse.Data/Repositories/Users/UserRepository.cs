@@ -7,61 +7,73 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using UserHouse.Data.ContextDb;
 using UserHouse.Data.Entities;
+using UserHouse.Infrastructure.Repositories.Generic;
 
 namespace UserHouse.Data.Repositories.Users
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        private readonly UserHouseDbContext _userHouseDbContext;
-
-        public UserRepository()
+        public UserRepository(UserHouseDbContext userHouseDbContext)
+            :base(userHouseDbContext)
         {
-            _userHouseDbContext = new UserHouseDbContext();
+            
         }
 
-        public void Create(User user)
+        public void DoSomethingAnother()
         {
-            _userHouseDbContext.Users.Add(user);
-
-            Save();
+            
         }
 
-        public void Delete(int id)
-        {
-            var user = _userHouseDbContext.Users.Find(id);
+        //private readonly UserHouseDbContext _userHouseDbContext;
 
-            _userHouseDbContext.Users.Remove(user);
+        //public UserRepository()
+        //{
+        //    _userHouseDbContext = new UserHouseDbContext();
+        //}
 
-            Save();
-        }
+        //public void Create(User user)
+        //{
+        //    _userHouseDbContext.Users.Add(user);
 
-        public List<User> GetAll()
-        {
-            return _userHouseDbContext.Users.ToList();
-        }
+        //    Save();
+        //}
 
-        public User GetById(int id)
-        {
-            return _userHouseDbContext.Users.Find(id);
-        }
+        //public void Delete(int id)
+        //{
+        //    var user = _userHouseDbContext.Users.Find(id);
 
-        public void Save()
-        {
-            _userHouseDbContext.SaveChanges();
-        }
+        //    _userHouseDbContext.Users.Remove(user);
 
-        //TODO: Think of better way to do
-        public void Update(User user)
-        {
-            User oldUser = _userHouseDbContext.Users.Find(user.Id);
+        //    Save();
+        //}
 
-            oldUser.FirstName = user.FirstName;
-            oldUser.LastName = user.LastName;
-            oldUser.DateOfBirth = user.DateOfBirth;
+        //public List<User> GetAll()
+        //{
+        //    return _userHouseDbContext.Users.ToList();
+        //}
 
-            _userHouseDbContext.Users.Update(oldUser);
+        //public User GetById(int id)
+        //{
+        //    return _userHouseDbContext.Users.Find(id);
+        //}
 
-            Save();
-        }
+        //public void Save()
+        //{
+        //    _userHouseDbContext.SaveChanges();
+        //}
+
+        ////TODO: Think of better way to do
+        //public void Update(User user)
+        //{
+        //    User oldUser = _userHouseDbContext.Users.Find(user.Id);
+
+        //    oldUser.FirstName = user.FirstName;
+        //    oldUser.LastName = user.LastName;
+        //    oldUser.DateOfBirth = user.DateOfBirth;
+
+        //    _userHouseDbContext.Users.Update(oldUser);
+
+        //    Save();
+        //}
     }
 }

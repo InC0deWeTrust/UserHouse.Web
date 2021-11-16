@@ -3,56 +3,68 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using UserHouse.Application.Models;
 using UserHouse.Data.Entities;
 using UserHouse.Data.Repositories.Users;
-using UserHouse.Web.Dtos.Users;
+using UserHouse.Infrastructure.Repositories.Generic;
 
 namespace UserHouse.Application.Users
 {
-    public class UserAppService
+    public class UserAppService : IUserAppService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IGenericRepository<User> _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserAppService(IUserRepository userRepository)
+        public UserAppService(
+            IGenericRepository<User> userRepository,
+            IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public List<UserModel> GetAll()
         {
             var users = _userRepository.GetAll();
 
-            return CustomMapper.mapper.Map<List<UserModel>>(users);
+            return _mapper.Map<List<UserModel>>(users);
         }
 
-        public UserModel GetById(int userId)
+        public async Task<UserModel> GetById(int userId)
         {
-            User user = _userRepository.GetById(userId);
+            var user = await _userRepository.Get(userId);
 
-            return CustomMapper.mapper.Map<UserModel>(user);
+            return _mapper.Map<UserModel>(user);
         }
 
-        public void Create(CreateUserDto createUserDto)
+        public void Create(UserModel createUserDto)
         {
-            var newUser = CustomMapper.mapper.Map<User>(createUserDto);
+            var newUser = _mapper.Map<User>(createUserDto);
 
             newUser.DateOfBirth = DateTime.Now;
 
-            _userRepository.Create(newUser);
+            _userRepository.Add(newUser);
         }
 
-        public void Update(UserDto userDto)
+        public void Update(UserModel userDto)
         {
-            var updatedUser = CustomMapper.mapper.Map<User>(userDto);
+            var updatedUser = _mapper.Map<User>(userDto);
 
             _userRepository.Update(updatedUser);
         }
 
-        public void Delete(int userId)
+        public void Delete(UserModel userModel)
         {
-            _userRepository.Delete(userId);
+            var user = _mapper.Map<User>(userModel);
+
+            _userRepository.Delete(user);
+        }
+
+        public void DoSomethingInAppService()
+        {
+            
         }
     }
 }

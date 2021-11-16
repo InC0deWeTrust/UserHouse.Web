@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using UserHouse.Application;
 using UserHouse.Data.Entities;
 using UserHouse.Application.Models;
 using UserHouse.Application.Users;
-using UserHouse.Web.Dtos.Users;
+using UserHouse.Web.Host.Dtos.Users;
 
 namespace UserHouse.Web.Controllers
 {
@@ -15,10 +16,14 @@ namespace UserHouse.Web.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly UserAppService _userAppService;
 
-        public UserController(UserAppService userAppService)
+        public UserController(
+            IMapper mapper,
+            UserAppService userAppService)
         {
+            _mapper = mapper;
             _userAppService = userAppService;
         }
 
@@ -26,14 +31,16 @@ namespace UserHouse.Web.Controllers
         [Route("Create")]
         public void CreateUser([FromBody] CreateUserDto createUserDto)
         {
-            _userAppService.Create(createUserDto);
+            var newUserModel = _mapper.Map<UserModel>(createUserDto);
+
+            _userAppService.Create(newUserModel);
         }
 
         [HttpGet]
         [Route("GetById")]
-        public UserModel GetUserById([FromHeader] int userId)
+        public async Task<UserModel> GetUserById([FromHeader] int userId)
         {
-            return _userAppService.GetById(userId);
+            return await _userAppService.GetById(userId);
         }
 
         [HttpGet]
@@ -47,14 +54,18 @@ namespace UserHouse.Web.Controllers
         [Route("Update")]
         public void UpdateUser([FromBody] UserDto userDto)
         {
-            _userAppService.Update(userDto);
+            var user = _mapper.Map<UserModel>(userDto);
+
+            _userAppService.Update(user);
         }
 
         [HttpDelete]
         [Route("Delete")]
-        public void DeleteUser([FromHeader] int userId)
+        public void DeleteUser([FromHeader] UserDto userDto)
         {
-            _userAppService.Delete(userId);
+            var user = _mapper.Map<UserModel>(userDto);
+
+            _userAppService.Delete(user);
         }
     }
 }
