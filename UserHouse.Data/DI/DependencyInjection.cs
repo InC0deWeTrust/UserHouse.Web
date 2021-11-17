@@ -14,8 +14,7 @@ namespace UserHouse.Data.DI
         public static IServiceCollection RegisterDataServices(this IServiceCollection services)
         {
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            //services.AddTransient<IUserRepository, UserRepository>();
 
             return services;
         }

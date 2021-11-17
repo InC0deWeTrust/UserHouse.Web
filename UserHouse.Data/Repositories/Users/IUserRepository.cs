@@ -21,7 +21,5 @@ namespace UserHouse.Data.Repositories.Users
         //void Update(User user);
 
         //void Save();
-
-        void DoSomethingAnother();
     }
 }

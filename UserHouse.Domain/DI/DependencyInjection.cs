@@ -7,7 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using UserHouse.Application.Users;
 using UserHouse.Data.ContextDb;
 using UserHouse.Data.DI;
+using UserHouse.Data.Entities;
 using UserHouse.Data.Repositories.Users;
+using UserHouse.Infrastructure.Repositories.Generic;
 
 namespace UserHouse.Application.DI
 {

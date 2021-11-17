@@ -31,16 +31,30 @@ namespace UserHouse.Web.Controllers
         [Route("Create")]
         public void CreateUser([FromBody] CreateUserDto createUserDto)
         {
-            var newUserModel = _mapper.Map<UserModel>(createUserDto);
+            if (createUserDto != null)
+            {
+                var newUserModel = _mapper.Map<UserModel>(createUserDto);
 
-            _userAppService.Create(newUserModel);
+                _userAppService.Create(newUserModel);
+            }
+            else
+            {
+                throw new Exception("Empty data for creating a new user!");
+            }
         }
 
         [HttpGet]
         [Route("GetById")]
         public async Task<UserModel> GetUserById([FromHeader] int userId)
         {
-            return await _userAppService.GetById(userId);
+            if (userId >= 1)
+            {
+                return await _userAppService.GetById(userId);
+            }
+            else
+            {
+                throw new Exception("Given id is not valid!");
+            }
         }
 
         [HttpGet]
@@ -54,18 +68,30 @@ namespace UserHouse.Web.Controllers
         [Route("Update")]
         public void UpdateUser([FromBody] UserDto userDto)
         {
-            var user = _mapper.Map<UserModel>(userDto);
+            if (userDto != null)
+            {
+                var user = _mapper.Map<UserModel>(userDto);
 
-            _userAppService.Update(user);
+                _userAppService.Update(user);
+            }
+            else
+            {
+                throw new Exception("Empty data for updating a user!");
+            }
         }
 
         [HttpDelete]
         [Route("Delete")]
-        public void DeleteUser([FromHeader] UserDto userDto)
+        public void DeleteUser([FromHeader] int userId)
         {
-            var user = _mapper.Map<UserModel>(userDto);
-
-            _userAppService.Delete(user);
+            if (userId >= 1)
+            {
+                _userAppService.Delete(userId);
+            }
+            else
+            {
+                throw new Exception("Given id is not valid!");
+            }
         }
     }
 }

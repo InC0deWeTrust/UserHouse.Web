@@ -16,6 +16,6 @@ namespace UserHouse.Application.Users
 
         void Create(UserModel createUserDto);
 
-        void Delete(UserModel userModel);
+        void Delete(int userId);
     }
 }

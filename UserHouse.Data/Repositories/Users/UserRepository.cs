@@ -18,12 +18,6 @@ namespace UserHouse.Data.Repositories.Users
         {
             
         }
-
-        public void DoSomethingAnother()
-        {
-            
-        }
-
         //private readonly UserHouseDbContext _userHouseDbContext;
 
         //public UserRepository()

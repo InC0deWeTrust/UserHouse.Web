@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using UserHouse.Data.ContextDb;
 using UserHouse.Application.DI;
 using AutoMapper;
+using FluentValidation.AspNetCore;
+using UserHouse.Web.Host.Validators.Users;
 
 namespace UserHouse
 {
@@ -31,6 +33,7 @@ namespace UserHouse
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserDtoValidator>());
             services.AddControllers();
             services.RegisterDomainServices();
         }

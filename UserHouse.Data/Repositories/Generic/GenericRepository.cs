@@ -9,15 +9,13 @@ namespace UserHouse.Infrastructure.Repositories.Generic
 {
     //Basically just a class that implements data access logic.
     //It should be implemented in data access layer and provide data access service to the app.
-    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly UserHouseDbContext _userHouseDbContext;
-        protected DbSet<T> _dbSet;
 
-        protected GenericRepository(UserHouseDbContext userHouseDbContext)
+        public GenericRepository(UserHouseDbContext userHouseDbContext)
         {
             _userHouseDbContext = userHouseDbContext;
-            _dbSet = userHouseDbContext.Set<T>();
         }
 
         public async Task Add(T entity)

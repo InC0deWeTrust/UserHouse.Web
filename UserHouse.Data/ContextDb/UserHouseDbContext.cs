@@ -2,36 +2,32 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using UserHouse.Data.Entities;
-using UserHouse.Infrastructure.ContextDb;
 
 namespace UserHouse.Data.ContextDb
 {
     public class UserHouseDbContext : DbContext
     {
-        //public DbContextOptionsBuilder<UserHouseDbContext> DbContextOptionsBuilder { get; set; }
-
-        //public DbContextOptions<UserHouseDbContext> DbContextOptions { get; set; }
-
-        //private AppConfiguration  Settings { get; set; }
+        private readonly IConfiguration _configuration;
 
         public UserHouseDbContext()
         {
-            //Settings = new AppConfiguration();
-            //DbContextOptionsBuilder = new DbContextOptionsBuilder<UserHouseDbContext>();
-            //DbContextOptionsBuilder.UseMySql(Settings.ConnectionString);
-            //DbContextOptions = DbContextOptionsBuilder.Options;
         }
 
-        public UserHouseDbContext(DbContextOptions<UserHouseDbContext> options)
+        public UserHouseDbContext(
+            DbContextOptions<UserHouseDbContext> options) 
             :base(options)
         {
+            //_configuration = configuration;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseMySql("Server=localhost; Database=userhouseDb; user=root; password=123qwe;");
-        }
+
+        //"Server=localhost; Database=userhouseDb; user=root; password=123qwe;"
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseMySql(_configuration.GetConnectionString("Default"));
+        //}
 
         public virtual DbSet<User> Users { get; set; }
     }
