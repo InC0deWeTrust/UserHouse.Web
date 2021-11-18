@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UserHouse.Web.Dtos.Users
+namespace UserHouse.Application.Dtos.Users
 {
     public class CreateUserDto
     {

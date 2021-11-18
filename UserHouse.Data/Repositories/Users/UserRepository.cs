@@ -7,61 +7,16 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using UserHouse.Data.ContextDb;
 using UserHouse.Data.Entities;
+using UserHouse.Infrastructure.Repositories.Generic;
 
-namespace UserHouse.Data.Repositories.Users
+namespace UserHouse.Infrastructure.Repositories.Users
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
-        private readonly UserHouseDbContext _userHouseDbContext;
-
-        public UserRepository()
+        public UserRepository(UserHouseDbContext userHouseDbContext)
+            :base(userHouseDbContext)
         {
-            _userHouseDbContext = new UserHouseDbContext();
-        }
-
-        public void Create(User user)
-        {
-            _userHouseDbContext.Users.Add(user);
-
-            Save();
-        }
-
-        public void Delete(int id)
-        {
-            var user = _userHouseDbContext.Users.Find(id);
-
-            _userHouseDbContext.Users.Remove(user);
-
-            Save();
-        }
-
-        public List<User> GetAll()
-        {
-            return _userHouseDbContext.Users.ToList();
-        }
-
-        public User GetById(int id)
-        {
-            return _userHouseDbContext.Users.Find(id);
-        }
-
-        public void Save()
-        {
-            _userHouseDbContext.SaveChanges();
-        }
-
-        //TODO: Think of better way to do
-        public void Update(User user)
-        {
-            User oldUser = _userHouseDbContext.Users.Find(user.Id);
-
-            oldUser.FirstName = user.FirstName;
-            oldUser.LastName = user.LastName;
-            oldUser.DateOfBirth = user.DateOfBirth;
-
-            _userHouseDbContext.Users.Update(oldUser);
-
-            Save();
+            
         }
     }
 }
