@@ -6,15 +6,15 @@ using UserHouse.Application.Models;
 
 namespace UserHouse.Application.Users
 {
-    public interface IUserAppService
+    public interface IUserService
     {
-        List<UserModel> GetAll();
+        void Create(UserModel createUserDto);
+
+        Task<List<UserModel>> GetAll();
 
         Task<UserModel> GetById(int userId);
 
         void Update(UserModel userDto);
-
-        void Create(UserModel createUserDto);
 
         void Delete(int userId);
     }

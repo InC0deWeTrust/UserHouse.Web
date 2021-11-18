@@ -8,20 +8,20 @@ using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
 using UserHouse.Application.Models;
 using UserHouse.Data.Entities;
-using UserHouse.Data.Repositories.Users;
+using UserHouse.Infrastructure.Repositories.Users;
 using UserHouse.Infrastructure.Repositories.Generic;
 
 namespace UserHouse.Application.Users
 {
-    public class UserAppService : IUserAppService
+    public class UserService : IUserService
     {
-        private readonly ILogger<UserAppService> _logger;
-        private readonly IGenericRepository<User> _userRepository;
+        private readonly ILogger<UserService> _logger;
+        private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
 
-        public UserAppService(
-            ILogger<UserAppService> logger,
-            IGenericRepository<User> userRepository,
+        public UserService(
+            ILogger<UserService> logger,
+            IRepository<User> userRepository,
             IMapper mapper)
         {
             _logger = logger;
@@ -29,9 +29,9 @@ namespace UserHouse.Application.Users
             _mapper = mapper;
         }
 
-        public List<UserModel> GetAll()
+        public async Task<List<UserModel>> GetAll()
         {
-            var users = _userRepository.GetAll();
+            var users = await _userRepository.GetAll();
 
             if (users == null)
             {
@@ -44,7 +44,7 @@ namespace UserHouse.Application.Users
 
         public async Task<UserModel> GetById(int userId)
         {
-            var user = await _userRepository.Get(userId);
+            var user = await _userRepository.GetAsync(userId);
 
             if (user == null)
             {
@@ -83,9 +83,9 @@ namespace UserHouse.Application.Users
             _userRepository.Update(updatedUser);
         }
 
-        public async void Delete(int userId)
+        public void Delete(int userId)
         {
-            var user = await _userRepository.Get(userId);
+            var user = _userRepository.Get(userId);
 
             if (user == null)
             {

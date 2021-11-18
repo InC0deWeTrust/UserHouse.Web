@@ -11,23 +11,21 @@ namespace UserHouse.Data.ContextDb
     {
         private readonly IConfiguration _configuration;
 
-        public UserHouseDbContext()
+        public UserHouseDbContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        public UserHouseDbContext(
-            DbContextOptions<UserHouseDbContext> options) 
+        public UserHouseDbContext(DbContextOptions<UserHouseDbContext> options) 
             :base(options)
         {
-            //_configuration = configuration;
+
         }
 
-
-        //"Server=localhost; Database=userhouseDb; user=root; password=123qwe;"
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseMySql(_configuration.GetConnectionString("Default"));
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseMySql(_configuration.GetConnectionString("Default"));
+        }
 
         public virtual DbSet<User> Users { get; set; }
     }

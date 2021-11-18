@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UserHouse.Web.Host.Dtos.Users
+namespace UserHouse.Application.Dtos.Users
 {
-    public class UserDto
+    public class CreateUserDto
     {
-        public int UserId { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
-
-        public DateTime DateOfBirth { get; set; }
     }
 }

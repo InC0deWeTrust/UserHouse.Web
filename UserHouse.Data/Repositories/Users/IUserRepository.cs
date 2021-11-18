@@ -6,20 +6,10 @@ using System.Threading.Tasks;
 using UserHouse.Data.Entities;
 using UserHouse.Infrastructure.Repositories.Generic;
 
-namespace UserHouse.Data.Repositories.Users
+namespace UserHouse.Infrastructure.Repositories.Users
 {
-    public interface IUserRepository : IGenericRepository<User>
+    public interface IUserRepository : IRepository<User>
     {
-        //List<User> GetAll();
 
-        //User GetById(int id);
-
-        //void Create(User user);
-
-        //void Delete(int id);
-
-        //void Update(User user);
-
-        //void Save();
     }
 }

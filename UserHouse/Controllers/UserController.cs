@@ -8,7 +8,7 @@ using UserHouse.Application;
 using UserHouse.Data.Entities;
 using UserHouse.Application.Models;
 using UserHouse.Application.Users;
-using UserHouse.Web.Host.Dtos.Users;
+using UserHouse.Application.Dtos.Users;
 
 namespace UserHouse.Web.Controllers
 {
@@ -17,11 +17,11 @@ namespace UserHouse.Web.Controllers
     public class UserController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly UserAppService _userAppService;
+        private readonly IUserService _userAppService;
 
         public UserController(
             IMapper mapper,
-            UserAppService userAppService)
+            IUserService userAppService)
         {
             _mapper = mapper;
             _userAppService = userAppService;
@@ -59,9 +59,9 @@ namespace UserHouse.Web.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public List<UserModel> GetAllUsers()
+        public async Task<List<UserModel>> GetAllUsers()
         {
-            return _userAppService.GetAll();
+            return await _userAppService.GetAll();
         }
 
         [HttpPut]

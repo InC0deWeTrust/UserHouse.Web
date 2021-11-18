@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace UserHouse.Infrastructure.Repositories.Generic
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
-        Task<T> Get(int id);
+        Task<T> GetAsync(int id);
+
+        T Get(int id);
 
         Task<IEnumerable<T>> GetAll();
 
@@ -16,5 +18,7 @@ namespace UserHouse.Infrastructure.Repositories.Generic
         void Delete(T entity);
 
         void Update(T entity);
+
+        void Save();
     }
 }

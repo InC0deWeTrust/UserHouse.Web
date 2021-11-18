@@ -17,9 +17,10 @@ using UserHouse.Data.ContextDb;
 using UserHouse.Application.DI;
 using AutoMapper;
 using FluentValidation.AspNetCore;
-using UserHouse.Web.Host.Validators.Users;
+using Microsoft.OpenApi.Models;
+using UserHouse.Application.Validators.Users;
 
-namespace UserHouse
+namespace UserHouse.Web.Host
 {
     public class Startup
     {
@@ -32,14 +33,29 @@ namespace UserHouse
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserDtoValidator>());
             services.AddControllers();
+
             services.RegisterDomainServices();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Simple Control Panel for UserHouse API",
+                    Description = "An ASP.NET Core Web API for managing and testing items"
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("v1/swagger.json", "Swagger.V1.UserHouse.API");
+            });
 
             app.UseHttpsRedirection();
 
