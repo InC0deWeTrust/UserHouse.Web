@@ -12,10 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using UserHouse.Application.Auth;
 using UserHouse.Application.Dtos.Login;
 using UserHouse.Application.Models;
+using UserHouse.Application.Roles;
 using UserHouse.Application.Users;
-using UserHouse.Data.Entities;
-using UserHouse.Infrastructure.Entities.Roles;
-using UserHouse.Infrastructure.Entities.Users;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace UserHouse.Web.Host.Controllers
@@ -26,16 +24,19 @@ namespace UserHouse.Web.Host.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userAppService;
-        private readonly IOptions<AuthOptions> _options;
+        private readonly IOptions<AuthToken> _options;
+        private readonly IRoleService _roleService;
 
         public AuthController(
             IMapper mapper,
             IUserService userAppService,
-            IOptions<AuthOptions> options)
+            IOptions<AuthToken> options,
+            IRoleService roleService)
         {
             _mapper = mapper;
             _userAppService = userAppService;
             _options = options;
+            _roleService = roleService;
         }
 
         [Route("Login")]
@@ -61,13 +62,12 @@ namespace UserHouse.Web.Host.Controllers
         {
             var user = _userAppService.GetAll()
                 .Result
-                .Where(x => x.Email == email && x.FirstName == firstName)
-                .FirstOrDefault();
+                .FirstOrDefault(x => x.Email == email && x.FirstName == firstName);
 
             return user;
         }
 
-        private string GenerateJWTToken(UserModel userModel)
+        private async Task<string> GenerateJWTToken(UserModel userModel)
         {
             var authParams = _options.Value;
 
@@ -81,10 +81,12 @@ namespace UserHouse.Web.Host.Controllers
                 new Claim(JwtRegisteredClaimNames.Birthdate, userModel.DateOfBirth.ToString())
             };
 
-            //foreach (var role in user)
-            //{
+            var userRoles = await _roleService.GetRolesOfUser(userModel.Id);
 
-            //}
+            foreach (var role in userRoles)
+            {
+                claims.Add(new Claim("role", role.RoleName));
+            }
 
             var token = new JwtSecurityToken(authParams.Issuer,
                 authParams.Audience,

@@ -8,7 +8,7 @@ namespace UserHouse.Application.Users
 {
     public interface IUserService
     {
-        void Create(UserModel createUserDto);
+        Task Create(UserModel createUserDto);
 
         Task<List<UserModel>> GetAll();
 

@@ -16,7 +16,6 @@ namespace UserHouse.Application.Dtos.Users
 
         public DateTime DateOfBirth { get; set; }
 
-        //TODO: Change to fluent validation
         [EmailAddress]
         public string Email { get; set; }
     }

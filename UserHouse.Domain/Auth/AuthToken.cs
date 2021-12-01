@@ -5,7 +5,7 @@ using System.Text;
 
 namespace UserHouse.Application.Auth
 {
-    public class AuthOptions
+    public class AuthToken
     {
         public string Issuer { get; set; }
 

@@ -22,6 +22,7 @@ using UserHouse.Application.Auth;
 using UserHouse.Application.Validators.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using UserHouse.Application.Middleware;
 
 namespace UserHouse.Web.Host
 {
@@ -39,17 +40,17 @@ namespace UserHouse.Web.Host
             services.AddDbContext<UserHouseDbContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("Default"));
-            });
+            }, 
+                ServiceLifetime.Transient);
 
             services.AddControllers();
 
             services.RegisterDomainServices();
 
-            //TODO: MAKE IT PRETTIER
             var authOptionsConfiguration = Configuration.GetSection("Auth");
-            services.Configure<AuthOptions>(authOptionsConfiguration);
+            services.Configure<AuthToken>(authOptionsConfiguration);
 
-            var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
+            var authOptions = Configuration.GetSection("Auth").Get<AuthToken>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -106,6 +107,8 @@ namespace UserHouse.Web.Host
             app.UseRouting();
 
             app.UseCors();
+
+            app.UseMiddleware<CustomErrorHandleMiddleware>();
 
             app.UseAuthentication();
 

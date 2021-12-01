@@ -11,6 +11,8 @@ using UserHouse.Data.Entities;
 using UserHouse.Application.Models;
 using UserHouse.Application.Users;
 using UserHouse.Application.Dtos.Users;
+using UserHouse.Application.Helpers;
+using UserHouse.Infrastructure.Entities.Roles;
 
 namespace UserHouse.Web.Controllers
 {
@@ -21,8 +23,6 @@ namespace UserHouse.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IUserService _userAppService;
 
-        //private Guid userId => Guid.Parse(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
-
         public UserController(
             IMapper mapper,
             IUserService userAppService)
@@ -32,7 +32,8 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //Use it for access only through roles
+        [Authorize(Roles = "Admin")]
         [Route("Create")]
         public void CreateUser([FromBody] CreateUserDto createUserDto)
         {
@@ -44,11 +45,12 @@ namespace UserHouse.Web.Controllers
             }
             else
             {
-                throw new Exception("Empty data for creating a new user!");
+                throw new CustomUserFriendlyException("Empty data for creating a new user!");
             }
         }
 
         [HttpGet]
+        [Authorize(Roles = "Basic")]
         [Route("GetById")]
         public async Task<UserModel> GetUserById([FromHeader] int userId)
         {
@@ -58,7 +60,7 @@ namespace UserHouse.Web.Controllers
             }
             else
             {
-                throw new Exception("Given id is not valid!");
+                throw new CustomUserFriendlyException("Given id is not valid!");
             }
         }
 
@@ -81,7 +83,7 @@ namespace UserHouse.Web.Controllers
             }
             else
             {
-                throw new Exception("Empty data for updating a user!");
+                throw new CustomUserFriendlyException("Empty data for updating a user!");
             }
         }
 
@@ -95,7 +97,7 @@ namespace UserHouse.Web.Controllers
             }
             else
             {
-                throw new Exception("Given id is not valid!");
+                throw new CustomUserFriendlyException("Given id is not valid!");
             }
         }
     }

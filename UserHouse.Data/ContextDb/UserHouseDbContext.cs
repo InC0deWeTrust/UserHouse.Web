@@ -23,6 +23,10 @@ namespace UserHouse.Data.ContextDb
 
         public virtual DbSet<Permission> Permissions { get; set; }
 
+        public virtual DbSet<UserRole> UserRoles { get; set; }
+
+        public virtual DbSet<RolePermission> RolePermissions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserRole>()
@@ -37,13 +41,13 @@ namespace UserHouse.Data.ContextDb
 
             modelBuilder.Entity<RolePermission>()
                 .HasOne(x => x.Role)
-                .WithMany(xa => xa.RolePermissions)
-                .HasForeignKey(y => y.PermissionId);
+                .WithMany(y => y.RolePermissions)
+                .HasForeignKey(z => z.PermissionId);
 
             modelBuilder.Entity<RolePermission>()
                 .HasOne(x => x.Permission)
-                .WithMany(xa => xa.RolesPermissions)
-                .HasForeignKey(y => y.RoleId);
+                .WithMany(y => y.RolesPermissions)
+                .HasForeignKey(z => z.RoleId);
         }
     }
 }

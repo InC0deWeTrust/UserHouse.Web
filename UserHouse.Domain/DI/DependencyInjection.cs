@@ -10,7 +10,6 @@ using UserHouse.Application.Users;
 using UserHouse.Data.ContextDb;
 using UserHouse.Data.DI;
 using UserHouse.Data.Entities;
-using UserHouse.Infrastructure.Repositories.Users;
 using UserHouse.Infrastructure.Repositories.Generic;
 using UserHouse.Application.Validators.Users;
 
@@ -22,8 +21,8 @@ namespace UserHouse.Application.DI
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserDtoValidator>());
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<RoleService>();
+            services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<IUserService, UserService>();
             services.RegisterDataServices();
         }
     }

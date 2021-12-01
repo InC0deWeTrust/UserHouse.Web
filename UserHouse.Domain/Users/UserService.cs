@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
+using UserHouse.Application.Helpers;
 using UserHouse.Application.Models;
 using UserHouse.Application.Roles;
 using UserHouse.Data.Entities;
-using UserHouse.Infrastructure.Entities.Roles;
-using UserHouse.Infrastructure.Entities.Users;
-using UserHouse.Infrastructure.Repositories.Users;
 using UserHouse.Infrastructure.Repositories.Generic;
 
 namespace UserHouse.Application.Users
@@ -21,13 +19,13 @@ namespace UserHouse.Application.Users
         private readonly ILogger<UserService> _logger;
         private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
-        private readonly RoleService _roleService;
+        private readonly IRoleService _roleService;
 
         public UserService(
             ILogger<UserService> logger,
             IRepository<User> userRepository,
             IMapper mapper,
-            RoleService roleService)
+            IRoleService roleService)
         {
             _logger = logger;
             _userRepository = userRepository;
@@ -42,7 +40,7 @@ namespace UserHouse.Application.Users
             if (users == null)
             {
                 _logger.LogInformation("List of users is empty");
-                throw new Exception("Unable to get users!");
+                throw new CustomUserFriendlyException("Unable to get users!");
             }
 
             return _mapper.Map<List<UserModel>>(users);
@@ -55,27 +53,28 @@ namespace UserHouse.Application.Users
             if (user == null)
             {
                 _logger.LogInformation($"Unable to find user with Id: {userId}");
-                throw new Exception("Unable to get specified user!");
+                throw new CustomUserFriendlyException("Unable to get specified user!");
             }
 
             return _mapper.Map<UserModel>(user);
         }
 
-        public void Create(UserModel userModel)
+        public async Task Create(UserModel userModel)
         {
             if (userModel == null)
             {
                 _logger.LogInformation("Unable to create a new user due to empty data in UserModel");
-                throw new Exception("Unable to create a new user!");
+                throw new CustomUserFriendlyException("Unable to create a new user!");
             }
 
             var newUser = _mapper.Map<User>(userModel);
 
             newUser.DateOfBirth = DateTime.Now;
 
-            _userRepository.Add(newUser);
+            await _userRepository.Add(newUser);
+            //_userRepository.Save();
 
-            _roleService.SetBasicUserRole();
+            await _roleService.SetBasicRole(newUser.Id);
         }
 
         public void Update(UserModel userModel)
@@ -83,12 +82,13 @@ namespace UserHouse.Application.Users
             if (userModel == null)
             {
                 _logger.LogInformation("Unable to update user due to empty data in UserModel");
-                throw new Exception("Unable to update specified user!");
+                throw new CustomUserFriendlyException("Unable to update specified user!");
             }
 
             var updatedUser = _mapper.Map<User>(userModel);
 
             _userRepository.Update(updatedUser);
+            //_userRepository.Save();
         }
 
         public void Delete(int userId)
@@ -98,10 +98,11 @@ namespace UserHouse.Application.Users
             if (user == null)
             {
                 _logger.LogInformation($"Unable to find user with Id: {userId} and delete it");
-                throw new Exception("Unable to delete specified user!");
+                throw new CustomUserFriendlyException("Unable to delete specified user!");
             }
 
             _userRepository.Delete(user);
+            //_userRepository.Save();
         }
     }
 }
