@@ -5,6 +5,7 @@ using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UserHouse.Application.Roles;
 using UserHouse.Application.Users;
 using UserHouse.Data.ContextDb;
 using UserHouse.Data.DI;
@@ -22,6 +23,7 @@ namespace UserHouse.Application.DI
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserDtoValidator>());
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<RoleService>();
             services.RegisterDataServices();
         }
     }

@@ -7,7 +7,10 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
 using UserHouse.Application.Models;
+using UserHouse.Application.Roles;
 using UserHouse.Data.Entities;
+using UserHouse.Infrastructure.Entities.Roles;
+using UserHouse.Infrastructure.Entities.Users;
 using UserHouse.Infrastructure.Repositories.Users;
 using UserHouse.Infrastructure.Repositories.Generic;
 
@@ -18,15 +21,18 @@ namespace UserHouse.Application.Users
         private readonly ILogger<UserService> _logger;
         private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
+        private readonly RoleService _roleService;
 
         public UserService(
             ILogger<UserService> logger,
             IRepository<User> userRepository,
-            IMapper mapper)
+            IMapper mapper,
+            RoleService roleService)
         {
             _logger = logger;
             _userRepository = userRepository;
             _mapper = mapper;
+            _roleService = roleService;
         }
 
         public async Task<List<UserModel>> GetAll()
@@ -68,6 +74,8 @@ namespace UserHouse.Application.Users
             newUser.DateOfBirth = DateTime.Now;
 
             _userRepository.Add(newUser);
+
+            _roleService.SetBasicUserRole();
         }
 
         public void Update(UserModel userModel)

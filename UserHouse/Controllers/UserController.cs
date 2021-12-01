@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using UserHouse.Application;
 using UserHouse.Data.Entities;
 using UserHouse.Application.Models;
@@ -19,6 +21,8 @@ namespace UserHouse.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IUserService _userAppService;
 
+        //private Guid userId => Guid.Parse(User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+
         public UserController(
             IMapper mapper,
             IUserService userAppService)
@@ -28,6 +32,7 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Create")]
         public void CreateUser([FromBody] CreateUserDto createUserDto)
         {

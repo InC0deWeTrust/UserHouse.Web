@@ -18,7 +18,10 @@ using UserHouse.Application.DI;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using UserHouse.Application.Auth;
 using UserHouse.Application.Validators.Users;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace UserHouse.Web.Host
 {
@@ -33,9 +36,50 @@ namespace UserHouse.Web.Host
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<UserHouseDbContext>(options =>
+            {
+                options.UseMySql(Configuration.GetConnectionString("Default"));
+            });
+
             services.AddControllers();
 
             services.RegisterDomainServices();
+
+            //TODO: MAKE IT PRETTIER
+            var authOptionsConfiguration = Configuration.GetSection("Auth");
+            services.Configure<AuthOptions>(authOptionsConfiguration);
+
+            var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = authOptions.Issuer,
+
+                        ValidateAudience = true,
+                        ValidAudience = authOptions.Audience,
+
+                        ValidateLifetime = true,
+
+                        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true
+                    };
+                });
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
+                    });
+            });
 
             services.AddSwaggerGen(options =>
             {
@@ -60,6 +104,10 @@ namespace UserHouse.Web.Host
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

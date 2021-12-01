@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserHouse.Data.ContextDb;
 
 namespace UserHouse.Data.Migrations
 {
     [DbContext(typeof(UserHouseDbContext))]
-    partial class UserHouseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211130094536_PopulateRolesAndPermissions")]
+    partial class PopulateRolesAndPermissions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,9 +27,6 @@ namespace UserHouse.Data.Migrations
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -84,7 +83,7 @@ namespace UserHouse.Data.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleId", "PermissionId");
 
                     b.ToTable("RolePermissions");
                 });
@@ -105,21 +104,21 @@ namespace UserHouse.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "RoleId");
 
                     b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("UserHouse.Infrastructure.Entities.Roles.RolePermission", b =>
                 {
-                    b.HasOne("UserHouse.Infrastructure.Entities.Roles.Role", "Role")
-                        .WithMany("RolePermissions")
+                    b.HasOne("UserHouse.Infrastructure.Entities.Permissions.Permission", "Permission")
+                        .WithMany("Roles")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UserHouse.Infrastructure.Entities.Permissions.Permission", "Permission")
-                        .WithMany("RolesPermissions")
+                    b.HasOne("UserHouse.Infrastructure.Entities.Roles.Role", "Role")
+                        .WithMany("Permissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -127,13 +126,13 @@ namespace UserHouse.Data.Migrations
 
             modelBuilder.Entity("UserHouse.Infrastructure.Entities.Users.UserRole", b =>
                 {
-                    b.HasOne("UserHouse.Data.Entities.User", "User")
+                    b.HasOne("UserHouse.Infrastructure.Entities.Roles.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UserHouse.Infrastructure.Entities.Roles.Role", "Role")
+                    b.HasOne("UserHouse.Data.Entities.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
