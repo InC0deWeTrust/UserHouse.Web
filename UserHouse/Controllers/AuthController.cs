@@ -7,6 +7,8 @@ using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using UserHouse.Application.Auth;
@@ -26,17 +28,20 @@ namespace UserHouse.Web.Host.Controllers
         private readonly IUserService _userAppService;
         private readonly IOptions<AuthToken> _options;
         private readonly IRoleService _roleService;
+        private readonly IConfiguration _configuration;
 
         public AuthController(
             IMapper mapper,
             IUserService userAppService,
             IOptions<AuthToken> options,
-            IRoleService roleService)
+            IRoleService roleService,
+            IConfiguration configuration)
         {
             _mapper = mapper;
             _userAppService = userAppService;
             _options = options;
             _roleService = roleService;
+            _configuration = configuration;
         }
 
         [Route("Login")]
@@ -69,6 +74,10 @@ namespace UserHouse.Web.Host.Controllers
 
         private async Task<string> GenerateJWTToken(UserModel userModel)
         {
+            //TODO: Remove it in the future + remove configuration injection
+            //Example of using env_variable
+            var test = _configuration["TOTAL_PAGES"];
+
             var authParams = _options.Value;
 
             var securityKey = authParams.GetSymmetricSecurityKey();

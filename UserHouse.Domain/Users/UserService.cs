@@ -72,7 +72,6 @@ namespace UserHouse.Application.Users
             newUser.DateOfBirth = DateTime.Now;
 
             await _userRepository.Add(newUser);
-            //_userRepository.Save();
 
             await _roleService.SetBasicRole(newUser.Id);
         }
@@ -88,7 +87,6 @@ namespace UserHouse.Application.Users
             var updatedUser = _mapper.Map<User>(userModel);
 
             _userRepository.Update(updatedUser);
-            //_userRepository.Save();
         }
 
         public void Delete(int userId)
@@ -102,7 +100,6 @@ namespace UserHouse.Application.Users
             }
 
             _userRepository.Delete(user);
-            //_userRepository.Save();
         }
     }
 }

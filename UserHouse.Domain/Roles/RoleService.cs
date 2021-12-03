@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using UserHouse.Application.Helpers;
 using UserHouse.Application.Models;
@@ -39,13 +41,6 @@ namespace UserHouse.Application.Roles
 
         public async Task SetBasicRole(int userId)
         {
-            //TODO: Think of it
-            //if (user == null)
-            //{
-            //    _logger.LogInformation("Unable to find user and set role for him");
-            //    throw new CustomUserFriendlyException($"Unable to set role for the user with Id: {userId}");
-            //}
-
             var basicRole = new Role {Id = Convert.ToInt32(RoleEnum.Basic)};
 
             var newBasicUser = new UserRole
@@ -55,13 +50,13 @@ namespace UserHouse.Application.Roles
             };
 
             await _userRoleRepository.Add(newBasicUser);
-            //_userRoleRepository.Save();
         }
 
         public async Task<List<RoleModel>> GetRolesOfUser(int userId)
         {
             var allUserRoles = await _userRoleRepository.GetAll();
 
+            //Get all existing Ids of roles for specific user
             var specificIdRolesForUser = allUserRoles
                 .Where(x => x.UserId == userId)
                 .Select(y => y.RoleId)
@@ -69,9 +64,9 @@ namespace UserHouse.Application.Roles
 
             var allRoles = await _roleRepository.GetAll();
 
-            //TODO: Solve it tmr
-            //var specificRolesForUser = allRoles
-            //    .Where(x => x.Id == allRoles)
+            //Get all roles for specific user by comparing UserRolesIds with AllRoles
+            var specificRolesForUser = allRoles
+                .Where(x => specificIdRolesForUser.Contains(x.Id));
 
             return _mapper.Map<List<RoleModel>>(specificRolesForUser);
         }

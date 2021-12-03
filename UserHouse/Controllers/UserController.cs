@@ -32,8 +32,7 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPost]
-        //Use it for access only through roles
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Super, Admin")]
         [Route("Create")]
         public void CreateUser([FromBody] CreateUserDto createUserDto)
         {
@@ -50,7 +49,7 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Basic")]
+        [Authorize(Roles = "Super, Admin, Basic")]
         [Route("GetById")]
         public async Task<UserModel> GetUserById([FromHeader] int userId)
         {
@@ -65,6 +64,7 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Super, Admin, Basic")]
         [Route("GetAll")]
         public async Task<List<UserModel>> GetAllUsers()
         {
@@ -72,6 +72,7 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Super")]
         [Route("Update")]
         public void UpdateUser([FromBody] UserDto userDto)
         {
@@ -88,6 +89,7 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Super")]
         [Route("Delete")]
         public void DeleteUser([FromHeader] int userId)
         {
