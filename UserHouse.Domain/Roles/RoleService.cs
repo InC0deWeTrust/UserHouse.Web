@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using UserHouse.Application.Helpers;
@@ -54,19 +55,18 @@ namespace UserHouse.Application.Roles
 
         public async Task<List<RoleModel>> GetRolesOfUser(int userId)
         {
-            var allUserRoles = await _userRoleRepository.GetAll();
-
             //Get all existing Ids of roles for specific user
-            var specificIdRolesForUser = allUserRoles
+            var specificIdRolesForUser = await _userRoleRepository
+                .GetAll()
                 .Where(x => x.UserId == userId)
                 .Select(y => y.RoleId)
-                .ToList();
-
-            var allRoles = await _roleRepository.GetAll();
+                .ToListAsync();
 
             //Get all roles for specific user by comparing UserRolesIds with AllRoles
-            var specificRolesForUser = allRoles
-                .Where(x => specificIdRolesForUser.Contains(x.Id));
+            var specificRolesForUser = await _roleRepository
+                .GetAll()
+                .Where(x => specificIdRolesForUser.Contains(x.Id))
+                .ToListAsync();
 
             return _mapper.Map<List<RoleModel>>(specificRolesForUser);
         }

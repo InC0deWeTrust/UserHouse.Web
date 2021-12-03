@@ -32,39 +32,29 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Super, Admin")]
+        //[Authorize(Roles = "Super, Admin")]
         [Route("Create")]
         public void CreateUser([FromBody] CreateUserDto createUserDto)
         {
-            if (createUserDto != null)
-            {
-                var newUserModel = _mapper.Map<UserModel>(createUserDto);
-
-                _userAppService.Create(newUserModel);
-            }
-            else
-            {
-                throw new CustomUserFriendlyException("Empty data for creating a new user!");
-            }
+            //throw new CustomUserFriendlyException("Given id is not valid!");
+            _userAppService.Create(_mapper.Map<UserModel>(createUserDto));
         }
 
         [HttpGet]
-        [Authorize(Roles = "Super, Admin, Basic")]
+        //[Authorize(Roles = "Super, Admin, Basic")]
         [Route("GetById")]
         public async Task<UserModel> GetUserById([FromHeader] int userId)
         {
-            if (userId >= 1)
-            {
-                return await _userAppService.GetById(userId);
-            }
-            else
+            if (userId <= 0)
             {
                 throw new CustomUserFriendlyException("Given id is not valid!");
             }
+
+            return await _userAppService.GetById(userId);
         }
 
         [HttpGet]
-        [Authorize(Roles = "Super, Admin, Basic")]
+        //[Authorize(Roles = "Super, Admin, Basic")]
         [Route("GetAll")]
         public async Task<List<UserModel>> GetAllUsers()
         {
@@ -72,35 +62,24 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Super")]
+        //[Authorize(Roles = "Super")]
         [Route("Update")]
         public void UpdateUser([FromBody] UserDto userDto)
         {
-            if (userDto != null)
-            {
-                var user = _mapper.Map<UserModel>(userDto);
-
-                _userAppService.Update(user);
-            }
-            else
-            {
-                throw new CustomUserFriendlyException("Empty data for updating a user!");
-            }
+            _userAppService.Update(_mapper.Map<UserModel>(userDto));
         }
 
         [HttpDelete]
-        [Authorize(Roles = "Super")]
+        //[Authorize(Roles = "Super")]
         [Route("Delete")]
         public void DeleteUser([FromHeader] int userId)
         {
-            if (userId >= 1)
-            {
-                _userAppService.Delete(userId);
-            }
-            else
+            if (userId <= 0)
             {
                 throw new CustomUserFriendlyException("Given id is not valid!");
             }
+
+            _userAppService.Delete(userId);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
 using UserHouse.Application.Helpers;
@@ -35,7 +36,9 @@ namespace UserHouse.Application.Users
 
         public async Task<List<UserModel>> GetAll()
         {
-            var users = await _userRepository.GetAll();
+            var users = await _userRepository
+                .GetAll()
+                .ToListAsync();
 
             if (users == null)
             {
@@ -61,6 +64,8 @@ namespace UserHouse.Application.Users
 
         public async Task Create(UserModel userModel)
         {
+            //userModel = null;
+
             if (userModel == null)
             {
                 _logger.LogInformation("Unable to create a new user due to empty data in UserModel");
@@ -68,6 +73,14 @@ namespace UserHouse.Application.Users
             }
 
             var newUser = _mapper.Map<User>(userModel);
+
+            //check for email
+            var allUsersEmail = _userRepository.GetAll().Any();
+
+            if (allUsersEmail)
+            {
+                throw new CustomUserFriendlyException("This email already exist");
+            }
 
             newUser.DateOfBirth = DateTime.Now;
 

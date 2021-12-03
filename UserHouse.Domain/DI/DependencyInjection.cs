@@ -6,6 +6,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UserHouse.Application.Roles;
+using UserHouse.Application.Security;
 using UserHouse.Application.Users;
 using UserHouse.Data.ContextDb;
 using UserHouse.Data.DI;
@@ -23,6 +24,7 @@ namespace UserHouse.Application.DI
             services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserDtoValidator>());
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddScoped<ISecurityService, SecurityService>();
             services.RegisterDataServices();
         }
     }

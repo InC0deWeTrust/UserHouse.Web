@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -34,9 +35,9 @@ namespace UserHouse.Infrastructure.Repositories.Generic
             return _userHouseDbContext.Set<T>().Find(id);
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public IQueryable<T> GetAll()
         {
-            return await _userHouseDbContext.Set<T>().ToListAsync();
+            return _userHouseDbContext.Set<T>();
         }
 
         public void Update(T entity)
@@ -51,9 +52,6 @@ namespace UserHouse.Infrastructure.Repositories.Generic
             Save();
         }
 
-        //TODO: ASK THE QUESTION BELOW
-        //Is it okay to use it automatically?
-        //It works correctly
         public void Save()
         {
             _userHouseDbContext.SaveChanges();

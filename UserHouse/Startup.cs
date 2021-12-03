@@ -43,8 +43,6 @@ namespace UserHouse.Web.Host
             }, 
                 ServiceLifetime.Transient);
 
-            services.AddControllers();
-
             services.RegisterDomainServices();
 
             var authOptionsConfiguration = Configuration.GetSection("Auth");
@@ -91,6 +89,8 @@ namespace UserHouse.Web.Host
                     Description = "An ASP.NET Core Web API for managing and testing items"
                 });
             });
+
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
