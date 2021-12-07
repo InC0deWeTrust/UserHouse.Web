@@ -46,6 +46,7 @@ namespace UserHouse.Web.Host
             services.RegisterDomainServices();
 
             var authOptionsConfiguration = Configuration.GetSection("Auth");
+
             services.Configure<AuthToken>(authOptionsConfiguration);
 
             var authOptions = Configuration.GetSection("Auth").Get<AuthToken>();

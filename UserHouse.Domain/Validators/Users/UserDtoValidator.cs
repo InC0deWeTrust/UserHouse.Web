@@ -12,6 +12,11 @@ namespace UserHouse.Application.Validators.Users
     {
         public UserDtoValidator()
         {
+            RuleFor(x => x.UserId)
+                .NotEmpty().OnFailure(
+                    x => throw new CustomUserFriendlyException(
+                        "UserId is required!"));
+
             RuleFor(x => x.FirstName)
                 .NotEmpty().OnFailure(
                     x => throw new CustomUserFriendlyException(
@@ -33,15 +38,10 @@ namespace UserHouse.Application.Validators.Users
                     x => throw new CustomUserFriendlyException(
                         "Date of Birth is required!"));
 
-            RuleFor(x => x.UserId)
-                .NotEmpty().OnFailure(
-                    x => throw new CustomUserFriendlyException(
-                        "UserId is required!"));
-
             RuleFor(x => x.Email)
                 .EmailAddress().OnFailure(
                     x => throw new CustomUserFriendlyException(
-                        "This should be an email!"))
+                        "Email is required!"))
                 .MaximumLength(64).OnFailure(
                     x => throw new CustomUserFriendlyException(
                         "Max length is 64 symbols!"));

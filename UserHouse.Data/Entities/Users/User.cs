@@ -20,8 +20,7 @@ namespace UserHouse.Data.Entities
 
         public string Email { get; set; }
 
-        //TODO: Add password to User entity
-        //public string Password { get; set; }
+        public string Password { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; }
     }

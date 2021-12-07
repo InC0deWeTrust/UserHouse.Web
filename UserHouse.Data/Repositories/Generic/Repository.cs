@@ -12,7 +12,7 @@ namespace UserHouse.Infrastructure.Repositories.Generic
     //It should be implemented in data access layer and provide data access service to the app.
     public class Repository<T> : IRepository<T> where T : class
     {
-        private UserHouseDbContext _userHouseDbContext;
+        private readonly UserHouseDbContext _userHouseDbContext;
 
         public Repository(UserHouseDbContext userHouseDbContext)
         {

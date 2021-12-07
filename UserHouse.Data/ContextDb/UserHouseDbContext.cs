@@ -29,6 +29,22 @@ namespace UserHouse.Data.ContextDb
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>(b =>
+            {
+                b.HasIndex(e => new {e.Email, e.DateOfBirth});
+            });
+
+            modelBuilder.Entity<Role>(b =>
+            {
+                b.HasIndex(e => new { e.RoleName });
+            });
+
+            modelBuilder.Entity<Permission>(b =>
+            {
+                b.HasIndex(e => new { e.PermissionName });
+            });
+
+            //Many to many relations
             modelBuilder.Entity<UserRole>()
                 .HasOne(x => x.User)
                 .WithMany(y => y.UserRoles)

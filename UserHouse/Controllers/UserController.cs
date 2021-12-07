@@ -12,6 +12,7 @@ using UserHouse.Application.Models;
 using UserHouse.Application.Users;
 using UserHouse.Application.Dtos.Users;
 using UserHouse.Application.Helpers;
+using UserHouse.Infrastructure.Entities.Permissions;
 using UserHouse.Infrastructure.Entities.Roles;
 
 namespace UserHouse.Web.Controllers
@@ -32,54 +33,77 @@ namespace UserHouse.Web.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Super, Admin")]
         [Route("Create")]
-        public void CreateUser([FromBody] CreateUserDto createUserDto)
+        public async Task CreateUser([FromBody] CreateUserDto createUserDto)
         {
-            //throw new CustomUserFriendlyException("Given id is not valid!");
-            _userAppService.Create(_mapper.Map<UserModel>(createUserDto));
+            //I'm mapping here to show that mapper works on this layer too
+            var newUser = _mapper.Map<UserModel>(createUserDto);
+
+            await _userAppService.Create(newUser);
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Super, Admin, Basic")]
+        [Authorize(Roles = "Super, Admin, Basic, Custom")]
         [Route("GetById")]
-        public async Task<UserModel> GetUserById([FromHeader] int userId)
+        public async Task<UserDto> GetUserById([FromHeader] int userId)
         {
-            if (userId <= 0)
-            {
-                throw new CustomUserFriendlyException("Given id is not valid!");
-            }
+            var user = await _userAppService.GetById(userId);
 
-            return await _userAppService.GetById(userId);
+            return _mapper.Map<UserDto>(user);
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Super, Admin, Basic")]
+        [Authorize(Roles = "Super, Admin, Basic")]
         [Route("GetAll")]
-        public async Task<List<UserModel>> GetAllUsers()
+        public async Task<List<UserDto>> GetAllUsers()
         {
-            return await _userAppService.GetAll();
+            var users = await _userAppService.GetAll();
+
+            return _mapper.Map<List<UserDto>>(users);
         }
 
         [HttpPut]
-        //[Authorize(Roles = "Super")]
+        [Authorize(Roles = "Super, Admin")]
         [Route("Update")]
-        public void UpdateUser([FromBody] UserDto userDto)
+        public void UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
-            _userAppService.Update(_mapper.Map<UserModel>(userDto));
+            var updatedUser = _mapper.Map<UserModel>(updateUserDto);
+
+            _userAppService.Update(updatedUser);
         }
 
         [HttpDelete]
-        //[Authorize(Roles = "Super")]
+        [Authorize(Roles = "Super")]
         [Route("Delete")]
         public void DeleteUser([FromHeader] int userId)
         {
-            if (userId <= 0)
-            {
-                throw new CustomUserFriendlyException("Given id is not valid!");
-            }
-
             _userAppService.Delete(userId);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Super")]
+        [Route("AddRoleForUser")]
+        public async Task AddRoleForUser([FromHeader] int userId, int roleId)
+        {
+            await _userAppService.AddRole(userId, roleId);
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "Super")]
+        [Route("RemoveRoleFromUser")]
+        public async Task RemoveRoleFromUser([FromHeader] int userId, int roleId)
+        {
+            await _userAppService.RemoveRole(userId, roleId);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Super, Admin, Basic")]
+        [Route("ChangePassword")]
+        public async Task ChangePassword([FromBody] UpdateUserPasswordDto updateUserPasswordDto)
+        {
+            var updatedUser = _mapper.Map<UserModel>(updateUserPasswordDto);
+
+            await _userAppService.ChangePassword(updatedUser);
         }
     }
 }

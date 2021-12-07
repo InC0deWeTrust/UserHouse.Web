@@ -7,9 +7,9 @@ namespace UserHouse.Application.Dtos.Login
 {
     public class LoginDto
     {
-        public string FirstName { get; set; }
-
         [EmailAddress]
         public string Email { get; set; }
+
+        public string Password { get; set; }
     }
 }

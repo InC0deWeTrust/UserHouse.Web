@@ -17,5 +17,11 @@ namespace UserHouse.Application.Users
         void Update(UserModel userDto);
 
         void Delete(int userId);
+
+        Task AddRole(int userId, int roleId);
+
+        Task RemoveRole(int userId, int roleId);
+
+        Task ChangePassword(UserModel userModel);
     }
 }

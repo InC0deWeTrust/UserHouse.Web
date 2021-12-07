@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using FluentValidation;
-using UserHouse.Application.Dtos.Login;
+using Microsoft.EntityFrameworkCore;
+using UserHouse.Application.Dtos.Users;
 using UserHouse.Application.Helpers;
 
-namespace UserHouse.Application.Validators.Login
+namespace UserHouse.Application.Validators.Users
 {
-    public class LoginDtoValidator : AbstractValidator<LoginDto>
+    public class UpdateUserPasswordDtoValidator : AbstractValidator<UpdateUserPasswordDto>
     {
-        public LoginDtoValidator()
+        public UpdateUserPasswordDtoValidator()
         {
             RuleFor(x => x.Email)
                 .EmailAddress().OnFailure(
                     x => throw new CustomUserFriendlyException(
-                        "This should be an email!"))
+                        "Email is required!"))
                 .MaximumLength(64).OnFailure(
                     x => throw new CustomUserFriendlyException(
                         "Max length is 64 symbols!"));
