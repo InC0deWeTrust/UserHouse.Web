@@ -12,3 +12,8 @@ It's a simple project that I basically doing for myself to undestand basic thing
 >Migrations  
 >Basic patterns such as **Repository** and **Unit of Work**  
 >Correct naming of files  
+
+*Also you need to use Postman to activate my methods.
+>1) Get Auth token from Auth section.
+>2) Add header Authorization with value Bearer #your_generated_token#.
+>3) Call methods accroding to auth roles they are asiigned to.
